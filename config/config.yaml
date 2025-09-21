@@ -1,0 +1,89 @@
+# Cash Flow Analysis Configuration
+
+analysis:
+  lookback_months: 12
+  confidence_threshold: 0.8
+  anomaly_sensitivity: 2.5
+
+  # Date handling
+  date_formats:
+    - "%m/%d/%Y"
+    - "%Y-%m-%d"
+    - "%m-%d-%Y"
+
+  # Balance validation
+  balance_tolerance: 0.01
+
+categorization:
+  use_ml_classifier: false
+  fuzzy_match_threshold: 85
+
+  # Priority order for categorization
+  category_priority:
+    - EXCLUDED
+    - INTERNAL_TRANSFER
+    - INCOME
+    - EXPENSE
+
+  # User-defined custom rules
+  custom_rules:
+    - description_contains: "COMPANY PAYROLL"
+      flow_type: "INCOME"
+      category: "Salary"
+      confidence: 1.0
+
+    - description_contains: "MORTGAGE PAYMENT"
+      flow_type: "EXPENSE"
+      category: "Housing"
+      confidence: 1.0
+
+  # Merchant name standardization
+  merchant_aliases:
+    "AMZN MKTP": "Amazon"
+    "TST* ": "Restaurant"
+    "WHOLEFDS": "Whole Foods"
+    "TRADER JOE": "Trader Joes"
+    "CVS/PHARMACY": "CVS"
+
+output:
+  reports_directory: "./reports"
+  include_forecasting: true
+  dashboard_port: 8050
+
+  # Visualization settings
+  visualizations:
+    style: "plotly_white"
+    color_scheme: "wong"  # colorblind-friendly
+    width: 1200
+    height: 600
+
+    # Color mapping for categories
+    colors:
+      income: "#2E7D32"  # Green
+      expense: "#C62828"  # Red
+      transfer: "#1565C0"  # Blue
+      excluded: "#757575"  # Gray
+      net_positive: "#4CAF50"  # Light green
+      net_negative: "#F44336"  # Light red
+
+  # Report settings
+  reports:
+    include_summary: true
+    include_detailed: true
+    include_charts: true
+    export_csv: true
+    export_json: false
+
+    # PDF settings
+    pdf:
+      page_size: "letter"
+      margin_top: 72
+      margin_bottom: 72
+      margin_left: 72
+      margin_right: 72
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "./logs/cashflow_analysis.log"
